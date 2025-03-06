@@ -25,7 +25,6 @@ class Joueur
      * @return bool
      */
     public function ajouterJoueur($data)
-        //$nom, $prenom, $dateNaissance, $taille, $poids, $numero
     {
         if(!isset($data['nom'])){
             return null;
@@ -102,18 +101,25 @@ class Joueur
      * @param $statut
      * @return bool
      */
-    public function modifierJoueur($id, $nom, $prenom, $dateNaissance, $taille, $poids, $numeroLicence, $statut)
+    public function modifierJoueur($id, $data)
     {
+        // On regarde si l'id existe
+        $requete = $this->bdd->prepare('SELECT * FROM Joueur WHERE id = ?;');
+        $requete->execute(array($id));
+        if ($requete->fetch() === false) {
+            return 'ID non trouvé';
+        }
+
         try{
             $req = $this->bdd->prepare('UPDATE Joueur SET nom = ?, prenom = ?, dateNaissance = ?, taille = ?, poids = ?, numeroLicence = ?, statut = ? WHERE id = ?');
-            $req->execute(array($nom, $prenom, $dateNaissance, $taille, $poids, $numeroLicence, $statut, $id));
+            $req->execute(array($data['nom'], $data['prenom'], $data['dateNaissance'], $data['taille'], $data['poids'], $data['numero'], $data['statut'], $id));
         }catch (Exception $e){
             echo '<script type="text/javascript">
             window.onload = function () {
                 alert("Erreur: ' . addslashes($e->getMessage()) . '");
             }
             </script>';
-            return false;
+            return null;
         }
         return true;
     }
