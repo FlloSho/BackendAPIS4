@@ -1,5 +1,5 @@
 <?php
-require '../config/db.php'; // Inclut la connexion PDO à la base de données $pdo
+require '../controllers/db.php'; // Inclut la connexion PDO à la base de données $pdo
 
 class Joueur
 {
@@ -150,4 +150,5 @@ class Joueur
         }
         return true;
     }
+
 }
