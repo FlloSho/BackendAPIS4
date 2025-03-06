@@ -24,11 +24,16 @@ class Joueur
      * @param $numero
      * @return bool
      */
-    public function ajouterJoueur($nom, $prenom, $dateNaissance, $taille, $poids, $numero)
+    public function ajouterJoueur($data)
+        //$nom, $prenom, $dateNaissance, $taille, $poids, $numero
     {
+        if(!isset($data['nom'])){
+            return null;
+        }
+
         $req = $this->bdd->prepare('INSERT INTO Joueur (nom, prenom, numeroLicence, dateNaissance, taille, poids, statut) VALUES (?, ?, ?, ?, ?, ?,?)');
         try{
-            $req->execute(array($nom, $prenom, $numero, $dateNaissance, $taille, $poids, 'Actif'));
+            $req->execute(array($data['nom'], $data['prenom'], $data['numero'], $data['dateNaissance'], $data['taille'], $data['poids'], 'Actif'));
         }catch(Exception $e){
             echo '<script type="text/javascript">
             window.onload = function () {
@@ -37,7 +42,7 @@ class Joueur
             </script>';
             return false;
         }
-        return true;
+        return $this->bdd->lastInsertId();
     }
 
     /**
@@ -59,7 +64,7 @@ class Joueur
             return null;
         }
         // Récupère tous les résultats et les retourne sous forme de tableau
-        return $req->fetchAll();
+        return $req->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /**
@@ -82,7 +87,7 @@ class Joueur
             return false;
         }
 
-        return $req->fetch();
+        return $req->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /**

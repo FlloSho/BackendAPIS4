@@ -26,7 +26,16 @@ switch($http_methode) {
         break;
 
     case 'POST':
-        //a faire
+        // Récupération des données dans le corps
+        $postedData = file_get_contents('php://input');
+        $data = json_decode($postedData,true); //Reçoit du json et renvoi une adaptation exploitable en php. Le paramètre true impose un tableau en retour et non un objet.
+        $datareponse = $joueur->ajouterJoueur($data);
+
+        if($datareponse == null){
+            envoyer_response(500, 'Erreur de synstaxe sans votre requête ou erreur serveur lors de la création (vérifier bien l\'orthographe de votre requête)');
+        }else{
+            envoyer_response(201, 'Créer avec succès', $datareponse);
+        }
         break;
 }
 
