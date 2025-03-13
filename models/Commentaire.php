@@ -23,14 +23,14 @@ class Commentaire
     {
         // On regarde si l'id existe
         $requete = $this->bdd->prepare('SELECT * FROM Commentaire WHERE id_1 = ?;');
-        $requete->execute(array($id));
+        $requete->execute(array($idJoueur));
         if ($requete->fetch() === false) {
             return 'ID non trouvé'; //soit il n'y a pas de commentaires associé a ce joueur ou soit l'id est incorrect
         }
 
         $req = $this->bdd->prepare('SELECT * FROM Commentaire WHERE id_1 = ?');
         $req->execute(array($idJoueur));
-        return $req->fetchAll();
+        return $req->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /**
@@ -40,9 +40,16 @@ class Commentaire
      */
     public function afficherUnCommentaire($idCommentaire)
     {
+        // On regarde si l'id existe
+        $requete = $this->bdd->prepare('SELECT * FROM Commentaire WHERE id = ?;');
+        $requete->execute(array($idCommentaire));
+        if ($requete->fetch() === false) {
+            return 'ID non trouvé'; //soit il n'y a pas de commentaires associé a ce joueur ou soit l'id est incorrect
+        }
+
         $req = $this->bdd->prepare('SELECT * FROM Commentaire WHERE id = ?');
         $req->execute(array($idCommentaire));
-        return $req->fetch();
+        return $req->fetchAll((PDO::FETCH_ASSOC));
     }
 
     /**

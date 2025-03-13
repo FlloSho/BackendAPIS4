@@ -60,13 +60,13 @@ switch($http_methode) {
         $id=htmlspecialchars($_GET['id']);
         $dataReponse = $joueur->supprimerJoueur($id);
         if($dataReponse == 'ok'){
-            envoyer_response(200, 'Joeur supprimé avec succès');
+            deliverResponse(200, 'Joeur supprimé avec succès');
         }
         elseif($dataReponse === 'ID non trouvé'){
-            envoyer_response(404, 'ID non trouvé' );
+            deliverResponse(404, 'ID non trouvé' );
         }
         else{
-            envoyer_response(500, 'Erreur lors de la suppression');
+            deliverResponse(500, 'Erreur lors de la suppression');
         }
         break;
 

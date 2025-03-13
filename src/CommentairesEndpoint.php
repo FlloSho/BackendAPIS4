@@ -10,23 +10,28 @@
 $http_methode = $_SERVER['REQUEST_METHOD'];
 
 //on inclu le modèle
-include '../models/Commentaire.php';
+require '../models/Commentaire.php';
+require '../controllers/deliverResponse.php';
 $Commentaire = new Commentaire();
 
 //on regarde de quel type est a requête
 //on regarde de quel type est a requête
 switch($http_methode) {
     case 'GET':
-        if(isset($_GET['id'])){ //on regarde si l'utilisateur a demander un id
-            $id=htmlspecialchars($_GET['id']);
-            $data = $Commentaire->getJoueurParId($id); //si l'id est bien définit, on le récu et on le passe à la fonction avec l'id
-        }else{
-            $data = $joueur->tousLesJoueurs(); //sinon on appelle la fonction sans id
+        if(isset($_GET['idJoueur'])){ //on regarde si l'utilisateur a demander un id
+            $id=htmlspecialchars($_GET['idJoueur']);
+            $data = $Commentaire->afficherCommentaire($id); //si l'id est bien définit, on le récup et on le passe à la fonction avec l'id
+        }elseif(isset($_GET['id'])) {
+            $id = htmlspecialchars($_GET['id']);
+            $data = $Commentaire->afficherUnCommentaire($id);
         }
+        
         if(empty($data)){ //si la réponse est vide
-            envoyer_response(404, 'Aucunes données trouvées'); //on envoie une réponse 404
-        }else{
-            envoyer_response(201, 'Succes', $data); //on envoie la réponse
+            deliverResponse(404, 'Aucunes données trouvées'); //on envoie une réponse 404
+        }elseif($data === 'ID non trouvé'){
+            deliverResponse(404, 'ID non trouvé');
+        }else {
+            deliverResponse(201, 'Succes', $data); //on envoie la réponse
         }
         break;
 
