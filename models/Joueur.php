@@ -1,13 +1,12 @@
 <?php
-require '../controllers/db.php'; // Inclut la connexion PDO à la base de données $pdo
-
+require('../config/db.php');
 class Joueur
 {
     private $bdd;
 
     public function __construct()
     {
-        global $pdo; // Récupère la connexion PDO globale
+        global $pdo;
         if (!isset($pdo)) {
             throw new Exception("La connexion à la base de données n'a pas été initialisée.");
         }
