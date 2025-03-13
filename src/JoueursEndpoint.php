@@ -10,7 +10,8 @@
 $http_methode = $_SERVER['REQUEST_METHOD'];
 
 //on inclu le modèle
-include '../models/Joueur.php';
+require '../models/Joueur.php';
+require '../controllers/deliverResponse.php';
 $joueur = new Joueur();
 
 //on regarde de quel type est a requête
@@ -23,9 +24,9 @@ switch($http_methode) {
             $data = $joueur->tousLesJoueurs(); //sinon on appelle la fonction sans id
         }
         if(empty($data)){ //si la réponse est vide
-            envoyer_response(404, 'Aucunes données trouvées'); //on envoie une réponse 404
+            deliverResponse(404, 'Aucunes données trouvées'); //on envoie une réponse 404
         }else{
-            envoyer_response(201, 'Succes', $data); //on envoie la réponse
+            deliverResponse(201, 'Succes', $data); //on envoie la réponse
         }
         break;
 
@@ -36,9 +37,9 @@ switch($http_methode) {
         $datareponse = $joueur->ajouterJoueur($data);
 
         if($datareponse == null){
-            envoyer_response(500, 'Erreur de synstaxe sans votre requête ou erreur serveur lors de la création (vérifier bien l\'orthographe de votre requête)');
+            deliverResponse(500, 'Erreur de synstaxe sans votre requête ou erreur serveur lors de la création (vérifier bien l\'orthographe de votre requête)');
         }else{
-            envoyer_response(201, 'Créer avec succès', $datareponse);
+            deliverResponse(201, 'Créer avec succès', $datareponse);
         }
         break;
     case 'PUT':
@@ -48,11 +49,11 @@ switch($http_methode) {
 
         $dataReponse = $joueur->modifierJoueur($id, $data);
         if($dataReponse == null){
-            envoyer_response(500, 'Erreur de synstaxe sans votre requête ou erreur serveur lors de la modification (vérifier bien l\'orthographe de votre requête)');
+            deliverResponse(500, 'Erreur de synstaxe sans votre requête ou erreur serveur lors de la modification (vérifier bien l\'orthographe de votre requête)');
         }elseif($dataReponse === 'ID non trouvé'){
-            envoyer_response(404, 'ID non trouvé');
+            deliverResponse(404, 'ID non trouvé');
         }else{
-            envoyer_response(200, 'Données modifiées avec succès');
+            deliverResponse(200, 'Données modifiées avec succès');
         }
         break;
     case 'DELETE' :
@@ -70,28 +71,4 @@ switch($http_methode) {
         break;
 
 }
-
-/**
- * Fonction qui va envoyer la réponse à l'utilisateur
- */
-function envoyer_response($status_code, $status_message, $data=null){
-    /// Paramétrage de l'entête HTTP
-    http_response_code($status_code); //Utilise un message standardisé en fonction du code HTTP
-    //header("HTTP/1.1 $status_code $status_message"); //Permet de personnaliser le message associé au code HTTP
-    header("Content-Type:application/json; charset=utf-8");//Indique au client le format de la réponse
-
-    /// Construction de la réponse
-    $response['status_code'] = $status_code;
-    $response['status_message'] = $status_message;
-    $response['data'] = $data;
-
-    /// Mapping de la réponse au format JSON
-    $json_response = json_encode($response);
-    if($json_response===false)
-        die('json encode ERROR : '.json_last_error_msg());
-
-    /// Affichage de la réponse (Retourné au client)
-    echo $json_response;
-}
-
-
+exit();
