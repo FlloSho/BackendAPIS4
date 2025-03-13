@@ -87,11 +87,18 @@ class Commentaire
      * @param $idCommentaire
      * @return bool
      */
-    public function modifierCommentaire($commentaire, $idCommentaire)
+    public function modifierCommentaire($data, $idCommentaire)
     {
+        // On regarde si l'id du joueur existe
+        $requete = $this->bdd->prepare('SELECT * FROM Commentaire WHERE id = ?;');
+        $requete->execute(array($idCommentaire));
+        if ($requete->fetch() === false) {
+            return 'ID non trouvé'; //soit il n'y a pas de commentaires associé a ce joueur ou soit l'id est incorrect
+        }
+
         $req = $this->bdd->prepare('UPDATE Commentaire SET commentaire = ? WHERE id = ?');
         try{
-            $req->execute(array($commentaire, $idCommentaire));
+            $req->execute(array($data['commentaire'], $idCommentaire));
         }catch(Exception $e){
             echo '<script type="text/javascript">
             window.onload = function () {

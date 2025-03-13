@@ -50,17 +50,22 @@ switch($http_methode) {
     case 'PUT':
         $postedData = file_get_contents('php://input');
         $data = json_decode($postedData,true);
-        $id=htmlspecialchars($_GET['id']); //Si l'on veut récupérer l'id de l'url on doit passer par $_GET mm si on est en PUT ou autres requêtes
+        if(isset($_GET['id'])) {
+            $id = htmlspecialchars($_GET['id']);
+            $dataReponse = $Commentaire->modifierCommentaire($data, $id);
 
-        $dataReponse = $joueur->modifierJoueur($id, $data);
-        if($dataReponse == null){
-            envoyer_response(500, 'Erreur de synstaxe sans votre requête ou erreur serveur lors de la modification (vérifier bien l\'orthographe de votre requête)');
-        }elseif($dataReponse === 'ID non trouvé'){
-            envoyer_response(404, 'ID non trouvé');
+            if($dataReponse == null){
+                deliverResponse(500, 'Erreur de synstaxe sans votre requête ou erreur serveur lors de la modification (vérifier bien l\'orthographe de votre requête)');
+            }elseif($dataReponse === 'ID non trouvé'){
+                deliverResponse(404, 'ID non trouvé');
+            }else{
+                deliverResponse(200, 'Données modifiées avec succès');
+            }
         }else{
-            envoyer_response(200, 'Données modifiées avec succès');
+            deliverResponse(404, 'Veuillez préciser l\'id du commentaire à modifier');
         }
         break;
+
     case 'DELETE' :
         $id=htmlspecialchars($_GET['id']);
         $dataReponse = $joueur->supprimerJoueur($id);
