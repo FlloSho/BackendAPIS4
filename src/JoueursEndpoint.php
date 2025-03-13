@@ -37,6 +37,20 @@ switch($http_methode) {
             envoyer_response(201, 'Créer avec succès', $datareponse);
         }
         break;
+    case 'PUT':
+        $postedData = file_get_contents('php://input');
+        $data = json_decode($postedData,true);
+        $id=htmlspecialchars($_GET['id']); //Si l'on veut récupérer l'id de l'url on doit passer par $_GET mm si on est en PUT ou autres requêtes
+
+        $dataReponse = $joueur->modifierJoueur($id, $data);
+        if($dataReponse == null){
+            envoyer_response(500, 'Erreur de synstaxe sans votre requête ou erreur serveur lors de la modification (vérifier bien l\'orthographe de votre requête)');
+        }elseif($dataReponse === 'ID non trouvé'){
+            envoyer_response(404, 'ID non trouvé');
+        }else{
+            envoyer_response(200, 'Données modifiées avec succès');
+        }
+        break;
 }
 
 /**
