@@ -11,33 +11,33 @@ $method = $_SERVER["REQUEST_METHOD"];
 switch ($method) {
     case "GET":
         if (isset($_GET['id'])) {
-            $data = $matchHockey->getMatchHockeyById($_GET['id']);
+            $data = $matchHockey->getMatchParId($_GET['id']);
         } else {
-            $data = $matchHockey->getAllMatchHockey();
+            $data = $matchHockey->tousLesMatchs();
         }
         if (empty($data)) {
-            deliverResponse(404, "Aucune donnée trouvée");
+            deliverResponse(404, "Erreur 404 : Aucune donnée trouvée");
         } else {
-            deliverResponse(200, "Succès", $data);
+            deliverResponse(200, "200 : Succès", $data);
         }
         break;
     case "POST":
         $postedData = file_get_contents('php://input');
         $data = json_decode($postedData, true);
-        $dataReponse = $matchHockey->addMatchHockey($data);
+        $dataReponse = $matchHockey->ajouterMatchHockey($data['nomAdversaire'], $data['lieu'], $data['dateHeure']);
         if ($dataReponse == null) {
-            deliverResponse(500, "Erreur de syntaxe dans votre requête ou erreur serveur lors de la création (vérifiez bien l'orthographe de votre requête)");
+            deliverResponse(400, "Erreur 400 : Requête invalide. Vérifiez la syntaxe et l'orthographe de votre requête");
         } else {
-            deliverResponse(201, "Créé avec succès", $dataReponse);
+            deliverResponse(201, "201 : Créé avec succès", $dataReponse);
         }
         break;
     case "PUT":
         $postedData = file_get_contents('php://input');
         $data = json_decode($postedData, true);
         $id = $_GET['id'];
-        $dataReponse = $matchHockey->updateMatchHockey($id, $data);
+        $dataReponse = $matchHockey->modifierMatchHockey($id, $data['nomAdversaire'], $data['lieu'], $data['dateHeure']);
         if ($dataReponse == null) {
-            deliverResponse(500, "Erreur de syntaxe dans votre requête ou erreur serveur lors de la modification (vérifiez bien l'orthographe de votre requête)");
+            deliverResponse(400, "Erreur 400 : Requête invalide. Vérifiez la syntaxe et l'orthographe de votre requête");
         } elseif ($dataReponse === 'ID non trouvé') {
             deliverResponse(404, "ID non trouvé");
         } else {
@@ -46,9 +46,9 @@ switch ($method) {
         break;
     case "DELETE":
         $id = $_GET['id'];
-        $dataReponse = $matchHockey->deleteMatchHockey($id);
+        $dataReponse = $matchHockey->supprimerMatchHockey($id);
         if ($dataReponse == null) {
-            deliverResponse(500, "Erreur de syntaxe dans votre requête ou erreur serveur lors de la suppression (vérifiez bien l'orthographe de votre requête)");
+            deliverResponse(400, "Erreur 400 : Requête invalide. Vérifiez la syntaxe et l'orthographe de votre requête");
         } elseif ($dataReponse === 'ID non trouvé') {
             deliverResponse(404, "ID non trouvé");
         } else {

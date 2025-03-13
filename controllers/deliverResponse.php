@@ -5,7 +5,7 @@
 function deliverResponse($status_code, $status_message, $data = null)
 {
     // Paramétrage de l'entête HTTP
-    header("HTTP/1.1 $status_code $status_message");
+    // header("HTTP/1.1 $status_code $status_message");
     $response['status'] = $status_code;
     $response['status_message'] = $status_message;
     $response['data'] = $data;
