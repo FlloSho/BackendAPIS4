@@ -54,15 +54,22 @@ class Commentaire
 
     /**
      * Ajoute un commentaire à un joueur
-     * @param $commentaire
-     * @param $idJoueur
+     * @param $data
      * @return bool
      */
-    public function ajouterCommentaire($commentaire, $idJoueur)
+    public function ajouterCommentaire($data)
+        /// $commentaire, $idJoueur
     {
+        // On regarde si l'id du joueur existe
+        $requete = $this->bdd->prepare('SELECT * FROM Commentaire WHERE id_1 = ?;');
+        $requete->execute(array($data['idJoueur']));
+        if ($requete->fetch() === false) {
+            return 'ID non trouvé'; //soit il n'y a pas de commentaires associé a ce joueur ou soit l'id est incorrect
+        }
+
         $req = $this->bdd->prepare('INSERT INTO Commentaire (commentaire, id_1) VALUES (?, ?)');
         try{
-            $req->execute(array($commentaire, $idJoueur));
+            $req->execute(array($data['commentaire'], $data['idJoueur']));
         }catch(Exception $e){
             echo '<script type="text/javascript">
             window.onload = function () {

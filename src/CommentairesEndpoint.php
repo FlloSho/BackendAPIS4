@@ -25,7 +25,7 @@ switch($http_methode) {
             $id = htmlspecialchars($_GET['id']);
             $data = $Commentaire->afficherUnCommentaire($id);
         }
-        
+
         if(empty($data)){ //si la réponse est vide
             deliverResponse(404, 'Aucunes données trouvées'); //on envoie une réponse 404
         }elseif($data === 'ID non trouvé'){
@@ -39,12 +39,12 @@ switch($http_methode) {
         // Récupération des données dans le corps
         $postedData = file_get_contents('php://input');
         $data = json_decode($postedData,true); //Reçoit du json et renvoi une adaptation exploitable en php. Le paramètre true impose un tableau en retour et non un objet.
-        $datareponse = $joueur->ajouterJoueur($data);
+        $datareponse = $Commentaire->ajouterCommentaire($data);
 
         if($datareponse == null){
-            envoyer_response(500, 'Erreur de synstaxe sans votre requête ou erreur serveur lors de la création (vérifier bien l\'orthographe de votre requête)');
+            deliverResponse(404, 'Erreur de synstaxe sans votre requête ou erreur serveur lors de la création (vérifier bien l\'orthographe de votre requête)');
         }else{
-            envoyer_response(201, 'Créer avec succès', $datareponse);
+            deliverResponse(201, 'Créer avec succès', $datareponse);
         }
         break;
     case 'PUT':
