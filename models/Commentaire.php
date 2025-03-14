@@ -117,6 +117,13 @@ class Commentaire
      */
     public function supprimerCommentaire($idCommentaire)
     {
+        // On regarde si l'id du joueur existe
+        $requete = $this->bdd->prepare('SELECT * FROM Commentaire WHERE id = ?;');
+        $requete->execute(array($idCommentaire));
+        if ($requete->fetch() === false) {
+            return 'ID non trouvé'; //soit il n'y a pas de commentaires associé a ce joueur ou soit l'id est incorrect
+        }
+
         $req = $this->bdd->prepare('DELETE FROM Commentaire WHERE id = ?');
         try{
             $req->execute(array($idCommentaire));
@@ -126,8 +133,8 @@ class Commentaire
                 alert("Erreur: ' . addslashes($e->getMessage()) . '");
             }
             </script>';
-            return false;
+            return 'non';
         }
-        return true;
+        return 'ok';
     }
 }
