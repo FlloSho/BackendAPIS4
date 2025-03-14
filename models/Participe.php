@@ -14,16 +14,37 @@ class Participe {
     }
 
     /**
-     * Ajoute un joueur titulaire à la table 'participe'.
+     * Ajoute un joueur titulaire à la table 'participe'. POST
      * @param $idJoueur
      * @param $idMatch
      * @param $poste
      * @return bool
      */
-    public function ajouterTitulaire($idJoueur, $idMatch, $poste) {
+    public function ajouterTitulaire($data) {
+        //$idJoueur, $idMatch, $poste
+
+        //On regarde que la ligne ne soit pas déjà dans la table
+        $requete = $this->bdd->prepare('SELECT * FROM Participe WHERE id = ? AND id_1 = ?');
+        $requete->execute(array($data['idJoueur'], $data['idMatch']));
+        if ($requete->fetch() !== false) {
+            return 'duplicate';
+        }
+        // On regarde si l'id du match existe
+        $requete = $this->bdd->prepare('SELECT * FROM MatchHockey WHERE id = ?;');
+        $requete->execute(array($data['idMatch']));
+        if ($requete->fetch() === false) {
+            return 'ID non trouvé';
+        }
+        // On regarde si l'id du joueur existe
+        $requete = $this->bdd->prepare('SELECT * FROM Joueur WHERE id = ?;');
+        $requete->execute(array($data['idJoueur']));
+        if ($requete->fetch() === false) {
+            return 'ID non trouvé';
+        }
+
         try {
             $req = $this->bdd->prepare('INSERT INTO Participe (id, id_1, poste, titulaire) VALUES (?, ?, ?, 1)');
-            return $req->execute(array($idJoueur, $idMatch, $poste));
+            return $req->execute(array($data['idJoueur'], $data['idMatch'], $data['poste']));
         } catch (PDOException $e) {
             echo 'Erreur SQL : ' . $e->getMessage();
             return false;
@@ -31,16 +52,37 @@ class Participe {
     }
 
     /**
-     * Ajoute un joueur remplaçant à la table 'participe'.Joeur
+     * Ajoute un joueur remplaçant à la table 'participe'.Joeur POST
      * @param $idJoueur
      * @param $idMatch
      * @param $poste
      * @return bool
      */
-    public function ajouterRemplacant($idJoueur, $idMatch, $poste) {
+    public function ajouterRemplacant($data) {
+        //$idJoueur, $idMatch, $poste
+
+        //On regarde que la ligne ne soit pas déjà dans la table
+        $requete = $this->bdd->prepare('SELECT * FROM Participe WHERE id = ? AND id_1 = ?');
+        $requete->execute(array($data['idJoueur'], $data['idMatch']));
+        if ($requete->fetch() !== false) {
+            return 'duplicate';
+        }
+        // On regarde si l'id du match existe
+        $requete = $this->bdd->prepare('SELECT * FROM MatchHockey WHERE id = ?;');
+        $requete->execute(array($data['idMatch']));
+        if ($requete->fetch() === false) {
+            return 'ID non trouvé';
+        }
+        // On regarde si l'id du joueur existe
+        $requete = $this->bdd->prepare('SELECT * FROM Joueur WHERE id = ?;');
+        $requete->execute(array($data['idJoueur']));
+        if ($requete->fetch() === false) {
+            return 'ID non trouvé';
+        }
+
         try {
             $req = $this->bdd->prepare('INSERT INTO Participe (id, id_1, poste, titulaire) VALUES (?, ?, ?, 0)');
-            return $req->execute(array($idJoueur, $idMatch, $poste));
+            return $req->execute(array($data['idJoueur'], $data['idMatch'], $data['poste']));
         } catch (PDOException $e) {
             echo 'Erreur SQL : ' . $e->getMessage();
             return false;
@@ -54,7 +96,7 @@ class Participe {
      */
     public function getTitulaires($idMatch) {
         try {
-            // On regarde si l'id du joueur existe
+            // On regarde si l'id du match existe
             $requete = $this->bdd->prepare('SELECT * FROM Participe WHERE id_1 = ?;');
             $requete->execute(array($idMatch));
             if ($requete->fetch() === false) {
@@ -80,7 +122,7 @@ class Participe {
      * @return array|false
      */
     public function getRemplacants($idMatch) {
-        // On regarde si l'id du joueur existe
+        // On regarde si l'id du match existe
         $requete = $this->bdd->prepare('SELECT * FROM Participe WHERE id_1 = ?;');
         $requete->execute(array($idMatch));
         if ($requete->fetch() === false) {

@@ -36,7 +36,28 @@ switch($http_methode) {
         break;
 
     case 'POST':
-        //a faire
+        // Récupération des données dans le corps
+        $postedData = file_get_contents('php://input');
+        $data = json_decode($postedData,true); //Reçoit du json et renvoi une adaptation exploitable en php. Le paramètre true impose un tableau en retour et non un objet.
+
+        if(isset($_GET['Titulaire']) and $_GET['Titulaire'] == 1){
+            $datareponse = $Participe->ajouterTitulaire($data);
+        }elseif (isset($_GET['Titulaire']) and $_GET['Titulaire'] == 0){
+            $datareponse = $Participe->ajouterRemplacant($data);
+        }else{
+            $datareponse=null;
+        }
+        
+        if($datareponse == null or $datareponse == false){
+            deliverResponse(500, 'Erreur de synstaxe sans votre requête ou erreur serveur lors de la création (vérifier bien l\'orthographe de votre requête)');
+        }elseif ($datareponse === 'ID non trouvé'){
+            deliverResponse(404, 'ID non trouvé');
+        }elseif($datareponse === 'duplicate'){
+            deliverResponse(404, 'La ligne existe déjà');
+        }
+        else{
+            deliverResponse(201, 'Créer avec succès', $datareponse);
+        }
         break;
 
     case 'PUT':
