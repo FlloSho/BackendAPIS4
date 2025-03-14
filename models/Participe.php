@@ -48,12 +48,19 @@ class Participe {
     }
 
     /**
-     * Récupère les joueurs titulaires d'un match.
+     * Récupère les joueurs titulaires d'un match. GET
      * @param $idMatch
      * @return array|false
      */
     public function getTitulaires($idMatch) {
         try {
+            // On regarde si l'id du joueur existe
+            $requete = $this->bdd->prepare('SELECT * FROM Participe WHERE id_1 = ?;');
+            $requete->execute(array($idMatch));
+            if ($requete->fetch() === false) {
+                return 'ID non trouvé'; //soit il n'y a pas de commentaires associé a ce joueur ou soit l'id est incorrect
+            }
+
             $req = $this->bdd->prepare('SELECT Participe.id, nom, prenom, Participe.poste, statut 
                                         FROM Participe 
                                         JOIN Joueur ON Participe.id = Joueur.id 
@@ -64,15 +71,22 @@ class Participe {
             echo 'Erreur SQL : ' . $e->getMessage();
             return false;
         }
-        return $req->fetchAll();
+        return $req->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /**
-     * Récupère les joueurs remplaçants d'un match.
+     * Récupère les joueurs remplaçants d'un match. GET
      * @param $idMatch
      * @return array|false
      */
     public function getRemplacants($idMatch) {
+        // On regarde si l'id du joueur existe
+        $requete = $this->bdd->prepare('SELECT * FROM Participe WHERE id_1 = ?;');
+        $requete->execute(array($idMatch));
+        if ($requete->fetch() === false) {
+            return 'ID non trouvé'; //soit il n'y a pas de commentaires associé a ce joueur ou soit l'id est incorrect
+        }
+
         try {
             $req = $this->bdd->prepare('SELECT Participe.id, nom , prenom, Participe.poste, statut 
                                         FROM Participe 
@@ -84,7 +98,7 @@ class Participe {
             echo 'Erreur SQL : ' . $e->getMessage();
             return false;
         }
-        return $req->fetchAll();
+        return $req->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /**
