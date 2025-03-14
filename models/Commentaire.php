@@ -21,9 +21,16 @@ class Commentaire
      */
     public function afficherCommentaire($idJoueur)
     {
+        // On regarde si l'id existe
+        $requete = $this->bdd->prepare('SELECT * FROM Commentaire WHERE id_1 = ?;');
+        $requete->execute(array($idJoueur));
+        if ($requete->fetch() === false) {
+            return 'ID non trouvé'; //soit il n'y a pas de commentaires associé a ce joueur ou soit l'id est incorrect
+        }
+
         $req = $this->bdd->prepare('SELECT * FROM Commentaire WHERE id_1 = ?');
         $req->execute(array($idJoueur));
-        return $req->fetchAll();
+        return $req->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /**
@@ -33,22 +40,36 @@ class Commentaire
      */
     public function afficherUnCommentaire($idCommentaire)
     {
+        // On regarde si l'id existe
+        $requete = $this->bdd->prepare('SELECT * FROM Commentaire WHERE id = ?;');
+        $requete->execute(array($idCommentaire));
+        if ($requete->fetch() === false) {
+            return 'ID non trouvé'; //soit il n'y a pas de commentaires associé a ce joueur ou soit l'id est incorrect
+        }
+
         $req = $this->bdd->prepare('SELECT * FROM Commentaire WHERE id = ?');
         $req->execute(array($idCommentaire));
-        return $req->fetch();
+        return $req->fetchAll((PDO::FETCH_ASSOC));
     }
 
     /**
      * Ajoute un commentaire à un joueur
-     * @param $commentaire
-     * @param $idJoueur
+     * @param $data
      * @return bool
      */
-    public function ajouterCommentaire($commentaire, $idJoueur)
+    public function ajouterCommentaire($data)
+        /// $commentaire, $idJoueur
     {
+        // On regarde si l'id du joueur existe
+        $requete = $this->bdd->prepare('SELECT * FROM Commentaire WHERE id_1 = ?;');
+        $requete->execute(array($data['idJoueur']));
+        if ($requete->fetch() === false) {
+            return 'ID non trouvé'; //soit il n'y a pas de commentaires associé a ce joueur ou soit l'id est incorrect
+        }
+
         $req = $this->bdd->prepare('INSERT INTO Commentaire (commentaire, id_1) VALUES (?, ?)');
         try{
-            $req->execute(array($commentaire, $idJoueur));
+            $req->execute(array($data['commentaire'], $data['idJoueur']));
         }catch(Exception $e){
             echo '<script type="text/javascript">
             window.onload = function () {
@@ -66,11 +87,18 @@ class Commentaire
      * @param $idCommentaire
      * @return bool
      */
-    public function modifierCommentaire($commentaire, $idCommentaire)
+    public function modifierCommentaire($data, $idCommentaire)
     {
+        // On regarde si l'id du joueur existe
+        $requete = $this->bdd->prepare('SELECT * FROM Commentaire WHERE id = ?;');
+        $requete->execute(array($idCommentaire));
+        if ($requete->fetch() === false) {
+            return 'ID non trouvé'; //soit il n'y a pas de commentaires associé a ce joueur ou soit l'id est incorrect
+        }
+
         $req = $this->bdd->prepare('UPDATE Commentaire SET commentaire = ? WHERE id = ?');
         try{
-            $req->execute(array($commentaire, $idCommentaire));
+            $req->execute(array($data['commentaire'], $idCommentaire));
         }catch(Exception $e){
             echo '<script type="text/javascript">
             window.onload = function () {
@@ -89,6 +117,13 @@ class Commentaire
      */
     public function supprimerCommentaire($idCommentaire)
     {
+        // On regarde si l'id du joueur existe
+        $requete = $this->bdd->prepare('SELECT * FROM Commentaire WHERE id = ?;');
+        $requete->execute(array($idCommentaire));
+        if ($requete->fetch() === false) {
+            return 'ID non trouvé'; //soit il n'y a pas de commentaires associé a ce joueur ou soit l'id est incorrect
+        }
+
         $req = $this->bdd->prepare('DELETE FROM Commentaire WHERE id = ?');
         try{
             $req->execute(array($idCommentaire));
@@ -98,8 +133,8 @@ class Commentaire
                 alert("Erreur: ' . addslashes($e->getMessage()) . '");
             }
             </script>';
-            return false;
+            return 'non';
         }
-        return true;
+        return 'ok';
     }
 }
