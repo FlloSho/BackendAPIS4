@@ -31,7 +31,7 @@ class Participe {
     }
 
     /**
-     * Ajoute un joueur remplaçant à la table 'participe'.
+     * Ajoute un joueur remplaçant à la table 'participe'.Joeur
      * @param $idJoueur
      * @param $idMatch
      * @param $poste
@@ -126,7 +126,7 @@ class Participe {
     }
 
     /**
-     * Récupère les matchs d'un joueur.
+     * Récupère les matchs d'un joueur. /!\ on peut le mettre dans l'api matchs
      * @param $idJoueur
      * @return array|false
      */
@@ -169,7 +169,7 @@ class Participe {
     }
 
     /**
-     * Récupère le poste le plus joué d'un joueur.
+     * Récupère le poste le plus joué d'un joueur. /!\ on peut le mettre dans l'api stats
      * @param $idJoueur
      * @return array|false
      */
@@ -192,7 +192,7 @@ class Participe {
     }
 
     /**
-     * Récupère la note moyenne d'un joueur.
+     * Récupère la note moyenne d'un joueur. /!\ on peut le mettre dans l'api stats
      * @param $idJoueur
      * @return array|false
      */
@@ -212,7 +212,7 @@ class Participe {
     }
 
     /**
-     * Récupère le nombre de matchs gagnés par un joueur.
+     * Récupère le nombre de matchs gagnés par un joueur. /!\ on peut le mettre dans l'api stats
      * @param $idJoueur
      * @return array|false
      */
@@ -234,7 +234,7 @@ class Participe {
     }
 
     /**
-     * Récupère le nombre de matchs perdus par un joueur.
+     * Récupère le nombre de matchs perdus par un joueur. /!\ on peut le mettre dans l'api stats
      * @param $idJoueur
      * @return array|false
      */
