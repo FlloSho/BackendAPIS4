@@ -47,7 +47,7 @@ switch($http_methode) {
         }else{
             $datareponse=null;
         }
-        
+
         if($datareponse == null or $datareponse == false){
             deliverResponse(500, 'Erreur de synstaxe sans votre requête ou erreur serveur lors de la création (vérifier bien l\'orthographe de votre requête)');
         }elseif ($datareponse === 'ID non trouvé'){
@@ -65,6 +65,29 @@ switch($http_methode) {
         break;
 
     case 'DELETE' :
-        //a faire
+        // Récupération des données dans le corps
+        $postedData = file_get_contents('php://input');
+        $data = json_decode($postedData,true); //Reçoit du json et renvoi une adaptation exploitable en php. Le paramètre true impose un tableau en retour et non un objet.
+
+        if($data === null){
+            deliverResponse(404, 'Veuillez indiquer dans le corps de la requête l\'id du joueuret l\' id du match de la participation à supprimer');
+        }else{
+            $dataReponse = $Participe->retirerParticipation($data);
+            if($dataReponse === 'duplicate'){
+                deliverResponse(404, 'Cette participation n\'existe pas');
+            }
+            elseif($dataReponse === 'ID joueur non trouvé'){
+                deliverResponse(404, 'ID joueur non trouvé' );
+            }
+            elseif($dataReponse === 'ID match non trouvé'){
+                deliverResponse(404, 'ID match non trouvé' );
+            }
+            elseif($dataReponse ){
+                deliverResponse(200, 'Participation supprimée avec succès');
+            }
+            else{
+                deliverResponse(500, 'Erreur lors de la suppression');
+            }
+        }
         break;
 }

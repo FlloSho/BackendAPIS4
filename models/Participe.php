@@ -144,15 +144,36 @@ class Participe {
     }
 
     /**
-     * retire une participation d'un joueur à un match donné.
+     * retire une participation d'un joueur à un match donné. DELETE
      * @param $idJoueur
      * @param $idMatch
      * @return bool
      */
-    public function retirerParticipation($idJoueur, $idMatch){
+    public function retirerParticipation($data){
+        //$idJoueur, $idMatch
+
+        // On regarde si l'id du match existe
+        $requete = $this->bdd->prepare('SELECT * FROM MatchHockey WHERE id = ?;');
+        $requete->execute(array($data['idMatch']));
+        if ($requete->fetch() === false) {
+            return 'ID match non trouvé';
+        }
+        // On regarde si l'id du joueur existe
+        $requete = $this->bdd->prepare('SELECT * FROM Joueur WHERE id = ?;');
+        $requete->execute(array($data['idJoueur']));
+        if ($requete->fetch() === false) {
+            return 'ID joueur non trouvé';
+        }
+        //Enfin on regarde si la participation existe
+        $requete = $this->bdd->prepare('SELECT * FROM Participe WHERE id = ? and id_1 = ?;');
+        $requete->execute(array($data['idJoueur'], $data['idMatch']));
+        if ($requete->fetch() === false) {
+            return 'duplicate';
+        }
+
         try {
             $req = $this->bdd->prepare('DELETE FROM Participe WHERE id = ? AND id_1 = ?');
-            return $req->execute(array($idJoueur, $idMatch));
+            return $req->execute(array($data['idJoueur'], $data['idMatch']));
         } catch (PDOException $e) {
             echo 'Erreur SQL : ' . $e->getMessage();
             return false;
