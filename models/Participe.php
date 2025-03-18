@@ -181,22 +181,32 @@ class Participe {
     }
 
     /**
-     * Modifie le poste d'un joueur dans un match.
+     * Modifie le poste d'un joueur dans un match. PUT
      * @param $idJoueur
      * @param $idMatch
      * @param $poste
      * @return bool
      */
-    public function modifierPoste($idJoueur, $idMatch, $poste) {
+    public function modifierPoste($data) {
+        //$idJoueur, $idMatch, $poste
+        if(!isset($data['poste']) || !isset($data['idMatch']) || !isset($data['idJoueur'])){
+            return false;
+        }
+        //On regarde si la participation existe
+        $requete = $this->bdd->prepare('SELECT * FROM Participe WHERE id = ? and id_1 = ?;');
+        $requete->execute(array($data['idJoueur'], $data['idMatch']));
+        if ($requete->fetch() === false) {
+            return 'existe pas';
+        }
+
         try {
             $req = $this->bdd->prepare('
             UPDATE Participe
             SET poste = ?
             WHERE id = ? AND id_1 = ?
         ');
-            $req->execute(array($poste, $idJoueur, $idMatch));
+            $req->execute(array($data['poste'], $data['idJoueur'], $data['idMatch']));
         } catch (PDOException $e) {
-            echo 'Erreur SQL : ' . $e->getMessage();
             return false;
         }
         return true;

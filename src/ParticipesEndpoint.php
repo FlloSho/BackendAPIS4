@@ -61,7 +61,19 @@ switch($http_methode) {
         break;
 
     case 'PUT':
-        //a faire
+        $postedData = file_get_contents('php://input');
+        $data = json_decode($postedData,true);
+
+        $dataReponse = $Participe->modifierPoste($data);
+        if($dataReponse == null || $dataReponse == false){
+            deliverResponse(500, 'Erreur de synstaxe sans votre requête ou erreur serveur lors de la modification (vérifier bien l\'orthographe de votre requête)');
+        }elseif($dataReponse === 'ID non trouvé'){
+            deliverResponse(404, 'ID non trouvé');
+        }elseif($dataReponse === 'existe pas'){
+            deliverResponse(404, 'Cette participation n\'existe pas');
+        }else{
+            deliverResponse(200, 'Données modifiées avec succès');
+        }
         break;
 
     case 'DELETE' :
