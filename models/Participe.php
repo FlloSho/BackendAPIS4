@@ -202,10 +202,10 @@ class Participe {
         try {
             $req = $this->bdd->prepare('
             UPDATE Participe
-            SET poste = ?
+            SET poste = ?, note = ?
             WHERE id = ? AND id_1 = ?
         ');
-            $req->execute(array($data['poste'], $data['idJoueur'], $data['idMatch']));
+            $req->execute(array($data['poste'], $data['note'], $data['idJoueur'], $data['idMatch']));
         } catch (PDOException $e) {
             return false;
         }
@@ -237,28 +237,6 @@ class Participe {
             return false;
         }
         return $req->fetchAll(PDO::FETCH_ASSOC);
-    }
-
-    /**
-     * Met à jour la note d'un joueur pour un match donné. ICI
-     * @param $idJoueur
-     * @param $idMatch
-     * @param $note
-     * @return bool
-     */
-    public function mettreAJourNoteJoueur($idJoueur, $idMatch, $note) {
-        try {
-            $req = $this->bdd->prepare('
-            UPDATE Participe
-            SET note = ?
-            WHERE id = ? AND id_1 = ?
-        ');
-            $req->execute(array($note, $idJoueur, $idMatch));
-        } catch (PDOException $e) {
-            echo 'Erreur SQL : ' . $e->getMessage();
-            return false;
-        }
-        return true;
     }
 
     /**
