@@ -213,11 +213,18 @@ class Participe {
     }
 
     /**
-     * Récupère les matchs d'un joueur. /!\ on peut le mettre dans l'api matchs
+     * Récupère les matchs d'un joueur.
      * @param $idJoueur
      * @return array|false
      */
     public function getMatchsParJoueur($idJoueur) {
+        // On regarde si l'id du joueur existe
+        $requete = $this->bdd->prepare('SELECT * FROM Joueur WHERE id = ?;');
+        $requete->execute(array($idJoueur));
+        if ($requete->fetch() === false) {
+            return 'ID non trouvé';
+        }
+
         try {
             $req = $this->bdd->prepare('
             SELECT p.note, p.poste, p.titulaire, m.* FROM MatchHockey m
@@ -226,15 +233,14 @@ class Participe {
             ORDER BY m.dateHeure DESC
         ');
             $req->execute(array($idJoueur));
-            return $req->fetchAll();
         } catch (PDOException $e) {
-            echo 'Erreur SQL : ' . $e->getMessage();
             return false;
         }
+        return $req->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /**
-     * Met à jour la note d'un joueur pour un match donné.
+     * Met à jour la note d'un joueur pour un match donné. ICI
      * @param $idJoueur
      * @param $idMatch
      * @param $note

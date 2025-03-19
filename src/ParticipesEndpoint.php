@@ -22,6 +22,9 @@ switch($http_methode) {
         }elseif(isset($_GET['ListeR'])){
             $id=htmlspecialchars($_GET['ListeR']);
             $data = $Participe->getRemplacants($id);
+        }elseif(isset($_GET['id'])){
+            $id = htmlspecialchars($_GET['id']);
+            $data = $Participe->getMatchsParJoueur($id);
         }else{
             $data = null;
         }
