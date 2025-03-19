@@ -2,6 +2,10 @@
 //ce fichier va réceptionner les requêtes de l'utilisateur et les rediriger vers les bonnes fonctions
 //uniuement pour la ressource joueurs
 
+//CORS
+//a compléter
+
+
 //regarde si l'utilisateur à envoyé une requête HTTP
 $http_methode = $_SERVER['REQUEST_METHOD'];
 
@@ -52,5 +56,19 @@ switch($http_methode) {
             deliverResponse(200, 'Données modifiées avec succès');
         }
         break;
+    case 'DELETE' :
+        $id=htmlspecialchars($_GET['id']);
+        $dataReponse = $joueur->supprimerJoueur($id);
+        if($dataReponse == 'ok'){
+            deliverResponse(200, 'Joeur supprimé avec succès');
+        }
+        elseif($dataReponse === 'ID non trouvé'){
+            deliverResponse(404, 'ID non trouvé' );
+        }
+        else{
+            deliverResponse(500, 'Erreur lors de la suppression');
+        }
+        break;
+
 }
 exit();

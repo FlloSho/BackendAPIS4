@@ -130,6 +130,13 @@ class Joueur
      */
     public function supprimerJoueur($id)
     {
+        // On regarde si l'id existe
+        $requete = $this->bdd->prepare('SELECT * FROM Joueur WHERE id = ?;');
+        $requete->execute(array($id));
+        if ($requete->fetch() === false) {
+            return 'ID non trouvé';
+        }
+
         try {
             // commence une transaction
             $this->bdd->beginTransaction();
@@ -158,7 +165,7 @@ class Joueur
         </script>';
             return false;
         }
-        return true;
+        return 'ok';
     }
 
 }
