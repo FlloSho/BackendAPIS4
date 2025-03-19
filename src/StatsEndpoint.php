@@ -18,10 +18,13 @@ $Participe = new Participe();
 //on regarde de quel type est a requête
 switch ($http_methode) {
     case 'GET':
-        if (isset($_GET['id'])) {
-            $id = htmlspecialchars($_GET['id']);
+        if (isset($_GET['idM'])) {
+            $id = htmlspecialchars($_GET['idM']);
             $data = $Participe->getNoteMoyenne($id);
-        } else {
+        } elseif(isset($_GET['idV'])){
+            $id = htmlspecialchars($_GET['idV']);
+            $data = $Participe->getPourcentageVictoire($id);
+        }else {
             $data = null;
         }
         if (empty($data)) { //si la réponse est vide

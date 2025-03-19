@@ -275,7 +275,7 @@ class Participe {
             WHERE id = ?
         ');
             $req->execute(array($idJoueur));
-            return $req->fetch();
+            return $req->fetch(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
             echo 'Erreur SQL : ' . $e->getMessage();
             return false;
@@ -297,9 +297,8 @@ class Participe {
             WHERE Participe.id = ?
         ');
             $req->execute(array($idJoueur));
-            return $req->fetch();
+            return $req->fetch(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
-            echo 'Erreur SQL : ' . $e->getMessage();
             return false;
         }
     }
