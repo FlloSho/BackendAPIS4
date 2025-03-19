@@ -24,7 +24,10 @@ switch ($http_methode) {
         } elseif(isset($_GET['idV'])){
             $id = htmlspecialchars($_GET['idV']);
             $data = $Participe->getPourcentageVictoire($id);
-        }else {
+        }elseif(isset($_GET['idP'])) {
+            $id = htmlspecialchars($_GET['idP']);
+            $data = $Participe->getPourcentageDefaite($id);
+        }else{
             $data = null;
         }
         if (empty($data)) { //si la réponse est vide

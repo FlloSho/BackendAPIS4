@@ -263,7 +263,7 @@ class Participe {
     }
 
     /**
-     * Récupère la note moyenne d'un joueur. /!\ on peut le mettre dans l'api stats
+     * Récupère la note moyenne d'un joueur.
      * @param $idJoueur
      * @return array|false
      */
@@ -283,7 +283,7 @@ class Participe {
     }
 
     /**
-     * Récupère le nombre de matchs gagnés par un joueur. /!\ on peut le mettre dans l'api stats
+     * Récupère le nombre de matchs gagnés par un joueur.
      * @param $idJoueur
      * @return array|false
      */
@@ -304,7 +304,7 @@ class Participe {
     }
 
     /**
-     * Récupère le nombre de matchs perdus par un joueur. /!\ on peut le mettre dans l'api stats
+     * Récupère le nombre de matchs perdus par un joueur.
      * @param $idJoueur
      * @return array|false
      */
@@ -318,9 +318,8 @@ class Participe {
             WHERE Participe.id = ?
         ');
             $req->execute(array($idJoueur));
-            return $req->fetch();
+            return $req->fetch(PDO::FETCH_ASSOC);
         } catch (PDOException $e) {
-            echo 'Erreur SQL : ' . $e->getMessage();
             return false;
         }
     }
