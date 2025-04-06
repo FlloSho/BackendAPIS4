@@ -18,6 +18,12 @@ RUN apt-get update && apt-get install -y \
 # Activation de mod_rewrite (souvent utile pour les frameworks PHP comme Laravel)
 RUN a2enmod rewrite
 
+# Installation de Composer
+RUN curl -sS https://getcomposer.org/installer | php -- --install-dir=/usr/local/bin --filename=composer
+
+# Installation des dépendances PHP via Composer
+RUN composer install
+
 # Configuration des permissions
 EXPOSE 80
 
