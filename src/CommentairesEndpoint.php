@@ -1,6 +1,5 @@
 <?php
-//ce fichier va réceptionner les requêtes de l'utilisateur et les rediriger vers les bonnes fonctions
-//uniuement pour la ressource Commentaire
+require_once __DIR__ . '/../config/cors.php';
 
 // Définir les en-têtes CORS au début
 header("Access-Control-Allow-Origin: *");

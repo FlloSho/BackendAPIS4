@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . '/../config/cors.php';
 require "../models/MatchHockey.php";
 require "../controllers/deliverResponse.php";
 

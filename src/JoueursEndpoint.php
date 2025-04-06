@@ -1,12 +1,5 @@
 <?php
-//ce fichier va réceptionner les requêtes de l'utilisateur et les rediriger vers les bonnes fonctions
-//uniuement pour la ressource joueurs
-
-
-// Définir les en-têtes CORS au début
-header("Access-Control-Allow-Origin: *");
-header("Access-Control-Allow-Headers: *");
-header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
+require_once __DIR__ . '/../config/cors.php';
 
 
 //regarde si l'utilisateur à envoyé une requête HTTP

@@ -1,5 +1,5 @@
 <?php
-
+require_once __DIR__ . '/../config/cors.php';
 //ce fichier va réceptionner les requêtes de l'utilisateur et les rediriger vers les bonnes fonctions
 //uniquement pour la ressource stats (ressources participe mais dicisé en deux parties)
 
