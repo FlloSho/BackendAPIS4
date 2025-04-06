@@ -35,7 +35,11 @@ switch ($method) {
         $postedData = file_get_contents('php://input');
         $data = json_decode($postedData, true);
         $id = $_GET['id'];
-        $dataReponse = $matchHockey->modifierMatchHockey($id, $data['nomAdversaire'], $data['lieu'], $data['dateHeure']);
+        if(isset($data['resultat'])){
+            $dataReponse = $matchHockey->ajouterResultat($id, $data['resultat']);
+        }else{
+            $dataReponse = $matchHockey->modifierMatchHockey($id, $data['nomAdversaire'], $data['lieu'], $data['dateHeure']);
+        }
         if ($dataReponse == null) {
             deliverResponse(400, "Erreur 400 : Requête invalide. Vérifiez la syntaxe et l'orthographe de votre requête");
         } elseif ($dataReponse === 'ID non trouvé') {

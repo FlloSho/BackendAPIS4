@@ -56,7 +56,7 @@ class MatchHockey
         }
 
         // Récupère tous les résultats et les retourne sous forme de tableau
-        return $req->fetchAll();
+        return $req->fetchAll(PDO::FETCH_ASSOC);
     }
 
     /**
