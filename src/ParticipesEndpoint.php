@@ -2,8 +2,10 @@
 //ce fichier va réceptionner les requêtes de l'utilisateur et les rediriger vers les bonnes fonctions
 //uniuement pour la ressource Participes
 
-//CORS
-//a compléter
+// Définir les en-têtes CORS au début
+header("Access-Control-Allow-Origin: *");
+header("Access-Control-Allow-Headers: Content-Type");
+header("Access-Control-Allow-Methods: GET, POST, PUT, DELETE, OPTIONS");
 
 //regarde si l'utilisateur à envoyé une requête HTTP
 $http_methode = $_SERVER['REQUEST_METHOD'];
